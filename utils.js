@@ -9,12 +9,64 @@ export const getType = (elem) => {
 }
 
 /**
- * 深拷贝 引用类型
+ * 判断一个变量是否为空 null、undefined、''、[]、{}
+ * @author shizhihuaxu 2019-08-26
+ * @param  any          elem 变量
+ * @return Boolean      true/false
+ */
+export const isEmpty = (elem) => {
+    // 是否为空的标志位
+    let flag = false
+    // 变量的数据类型
+    let type = Object.prototype.toString.call(elem).slice(8, -1).toLowerCase()
+
+    switch (type) {
+        case 'undefined' || 'null':
+            flag = true
+            break;
+        case 'string':
+            flag = elem.length === 0
+            break
+        case 'array':
+            flag = (elem.length === 0)
+            break
+        case 'object':
+            flag = Object.keys(elem).length === 0
+            break
+    }
+
+    return flag
+}
+
+/**
+ * 浅拷贝 引用类型 一层复制
+ * @author shizhihuaxu 2019-08-09
+ * @param  {Object} obj 源对象
+ * @return {Object}     新对象
+ */
+export const shallowClone = (obj) => {
+    let res = {}
+
+    for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            res[key] = obj[key]
+        }
+    }
+
+    return res
+}
+
+/**
+ * 深拷贝 引用类型 深层次复制
  * @author shizhihuaxu 2019-04-08
  * @param  {Object} obj 原对象
  * @return {Object}     新对象
  */
-// 局限性：层次过深导致堆栈溢出，不会保持引用(如果一个属性的值是一个对象)
+/** 局限性：
+    1、层次过深导致堆栈溢出
+    优点：
+    1、JSON.stringify内部做了循环引用的检测
+*/
 export const deepClone1 = (obj) => {
     let temp = JSON.stringfy(obj)
 
@@ -25,8 +77,11 @@ export const deepClone = (obj, res) => {
     var res = res || {}
 
     for (let key in obj) {
+        // 判断一下是否为自身属性 obj.hasOwnProperty(key)
+        // 参数校验 Object.prototype.toSrting.call(obj[key])
         if (typeof obj[key] === 'Object') {
             res[key] = (obj[key].constructor === "Array") ? [] : {}
+            // 尾递归优化 防止层级过深爆栈的问题
             deepClone(obj[key], res[key])
         } else {
             res[key] = obj[key]
