@@ -48,7 +48,7 @@ export const shallowClone = (obj) => {
     let res = {}
 
     for (let key in obj) {
-        if (obj.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) { // 只复制自身属性，不包含原型链上的属性
             res[key] = obj[key]
         }
     }
@@ -74,17 +74,18 @@ export const deepClone1 = (obj) => {
 }
 
 export const deepClone = (obj, res) => {
+    if(!(typeof obj === 'object' && obj !== null)) return obj // 排除掉 null 和 非对象的情况
+    
     var res = res || {}
 
     for (let key in obj) {
-        // 判断一下是否为自身属性 obj.hasOwnProperty(key)
-        // 参数校验 Object.prototype.toSrting.call(obj[key])
-        if (typeof obj[key] === 'Object') {
-            res[key] = (obj[key].constructor === "Array") ? [] : {}
-            // 尾递归优化 防止层级过深爆栈的问题
-            deepClone(obj[key], res[key])
-        } else {
-            res[key] = obj[key]
+        if (Object.prototype.hasOwnProperty.call(obj, key)) { // 只复制自身属性，不包含原型链上的属性
+            if (typeof obj[key] === 'object') {
+                res[key] = (obj[key].constructor === "Array") ? [] : {}
+                deepClone(obj[key], res[key]) // 尾递归优化 防止层级过深爆栈的问题
+            } else {
+                res[key] = obj[key]
+            }
         }
     }
 
