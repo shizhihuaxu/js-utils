@@ -166,3 +166,34 @@ export const toNonroundingFixed = (num, len = 1) => {
 
     return num.toFixed(len + 1).slice(0, -1) * 1
 }
+
+/**
+ * 基础数据类型的数组去重
+ * @author shizhihuaxu   2020-09-27
+ * @param  Array         需要去重的数组
+ * @return Array         已去重的数组
+ */
+function uniqueArr(arr) {
+    if(!arr.length) return []
+    
+    let newArr = []
+
+    arr.forEach((cur, index, curArr) => {
+    	// 处理 NaN 的情况
+        if(cur !== cur) {
+        	for (let i = 0, len = index; i < len; i++) {
+		      	if (Number.isNaN(newArr[i])) { // 如果新数组中已经存在 NaN，不再寻找
+		        	break
+		      	}else {
+		      		newArr.push(cur)
+		      	}
+		    }
+        }else {
+        	// indexOf 会返回第一个存在的索引，当 arr.indexOf(self) 与 index 不相同的时候，说明之前存在过，即为重复
+        	arr.indexOf(cur) === index ? newArr.push(cur) : null
+        }
+    })
+
+    return newArr
+}
+
