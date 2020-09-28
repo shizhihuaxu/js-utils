@@ -173,7 +173,7 @@ export const toNonroundingFixed = (num, len = 1) => {
  * @param  Array         需要去重的数组
  * @return Array         已去重的数组
  */
-function uniqueArr(arr) {
+export const uniqueArr = (arr) => {
     if (!arr.length) return []
 
     let newArr = []
@@ -190,6 +190,7 @@ function uniqueArr(arr) {
             }
         } else {
             // indexOf 会返回第一个存在的索引，当 arr.indexOf(self) 与 index 不相同的时候，说明之前存在过，即为重复
+            // indexOf 使用严格相等的模式判断
             arr.indexOf(cur) === index ? newArr.push(cur) : null
         }
     })
@@ -201,3 +202,19 @@ let arr1 = [NaN, NaN, undefined, undefined, null, null, 1, '1', +0, -0, 2, 2]
 let arr2 = uniqueArr(arr1)
 
 arr2 // [NaN, undefined, null,  1, '1', 0, 2]
+
+
+/**
+ * 基础数据类型数组去重，未处理 NaN 的情况
+ */
+export const uniqueArr1 = (arr) => {
+    let newArr = arr.reduce((acc, cur) => {
+        if (acc.indexOf(cur) === -1) { // indexOf 使用严格相等的模式判断
+            acc.push(cur)
+        }
+
+        return acc
+    }, [])
+
+    return newArr
+}
