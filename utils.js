@@ -204,9 +204,7 @@ let arr2 = uniqueArr(arr1)
 arr2 // [NaN, undefined, null,  1, '1', 0, 2]
 
 
-/**
- * 基础数据类型数组去重，未处理 NaN 的情况
- */
+// 基础数据类型数组去重，未处理 NaN 的情况
 export const uniqueArr1 = (arr) => {
     let newArr = arr.reduce((acc, cur) => {
         if (acc.indexOf(cur) === -1) { // indexOf 使用严格相等的模式判断
@@ -217,4 +215,17 @@ export const uniqueArr1 = (arr) => {
     }, [])
 
     return newArr
+}
+
+// 转换字节单位
+export const formatBytes = (bytes = 0, decimals = 2) => {
+    if (bytes === 0) return '0 Bytes'
+
+    const k = 1024
+    const dm = decimals < 0 ? 0 : decimals
+    const sizes = [ 'Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB' ]
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+    return `${ parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) } ${ sizes[i] }`
 }
